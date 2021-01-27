@@ -48,6 +48,9 @@ const internQuestion = [
 
 function teamMembers(){
    
+    //move first question to its own
+
+
     inquirer    
         .prompt([
             {
@@ -76,7 +79,17 @@ function teamMembers(){
                 
             },
         ]).then((response) => {
-
+            // console.log(response)
+            // if (response.position === 'Quit') {
+            //     render()
+            // }
+            const html = response.position === 'Quit' && render(allEmployees)
+            fs.writeFile('main.html', html , (err) => {
+               if (err){
+                   throw err 
+               }else {
+                   console.log('you made an HTML!!')
+               }})
             switch (response.position){
                 case 'Engineer': 
                     currentEmployeeQuestion = engineerQuestion;
@@ -91,23 +104,27 @@ function teamMembers(){
                   
                     break;
                 case 'Quit':
+                    return;
                     
+
             }
-            currentEmployee = response.position;
+            currentEmployee = response;
             inquirer    
         .prompt(currentEmployeeQuestion).then((response) => {
-            switch (currentEmployee){
+            // console.log(response)
+            // console.log(currentEmployee)
+            switch (currentEmployee.position){
                 case 'Engineer': 
-                    newEmployee =  new Engineer(response.name, response.id, response.email, response.gitHub);                
+                    newEmployee =  new Engineer(currentEmployee.name, currentEmployee.id, currentEmployee.email, response.gitHub);                
                     break;
                 case 'Intern':
-                    newEmployee = new Intern(response.name, response.id, response.email, response.school)              
+                    newEmployee = new Intern(currentEmployee.name, currentEmployee.id, currentEmployee.email, response.school)              
                     break;
                 case 'Manager':
-                    newEmployee = new Manager(response.name, response.id, response.email, response.officeNumber)                    
+                    newEmployee = new Manager(currentEmployee.name, currentEmployee.id, currentEmployee.email, response.officeNumber)                    
                     break;
             }
-
+            console.log(newEmployee)
             allEmployees.push(newEmployee);
             console.log(allEmployees);
             
