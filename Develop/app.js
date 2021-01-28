@@ -22,7 +22,7 @@ const managerQuestion = [
     {
         type: 'input',
         name: 'officeNumber',
-        message: 'Please enter your office number.',
+        message: 'Please enter your office number:',
         
     }
 ]
@@ -31,7 +31,7 @@ const engineerQuestion = [
     {
         type: 'input',
         name: 'gitHub',
-        message: 'Please enter your GitHub username.',
+        message: 'Please enter your GitHub username:',
         
     },
 ]
@@ -40,18 +40,13 @@ const internQuestion = [
     {
         type: 'input',
         name: 'school',
-        message: 'Please enter the name of your school.',
+        message: 'Please enter the name of your school:',
         
     },
 ]
-
-
 function teamMembers(){
-   
     //move first question to its own
-
-
-    inquirer    
+    inquirer
         .prompt([
             {
                 type: 'list',
@@ -60,78 +55,78 @@ function teamMembers(){
                 choices: ['Engineer', 'Intern', 'Manager', 'Quit']
 
             },
-            {
-                type: 'input',
-                name: 'name',
-                message: 'What is your name?.',
-                
-            },
-            {
-                type: 'input',
-                name: 'id',
-                message: 'Please enter your ID number.',
-                
-            },
-            {
-                type: 'input',
-                name: 'email',
-                message: 'Please enter your email address.',
-                
-            },
-        ]).then((response) => {
-            // console.log(response)
-            // if (response.position === 'Quit') {
-            //     render()
-            // }
-            const html = response.position === 'Quit' && render(allEmployees)
-            fs.writeFile('main.html', html , (err) => {
-               if (err){
-                   throw err 
-               }else {
-                   console.log('you made an HTML!!')
-               }})
-            switch (response.position){
-                case 'Engineer': 
-                    currentEmployeeQuestion = engineerQuestion;
-                    
-                    break;
-                case 'Intern':
-                    currentEmployeeQuestion = internQuestion;
-                   
-                    break;
-                case 'Manager':
-                    currentEmployeeQuestion = managerQuestion;
-                  
-                    break;
-                case 'Quit':
-                    return;
-                    
+
+        ]).then((response)  => {
+            if (response.position === 'Quit'){
+                render(allEmployees)
+                return
+            }
+            else {
+                inquirer    
+                    .prompt([
+                        {
+                            type: 'input',
+                            name: 'name',
+                            message: 'Please enter your name:',
+                            
+                        },
+                        {
+                            type: 'input',
+                            name: 'id',
+                            message: 'Please enter your ID number:',
+                            
+                        },
+                        {
+                            type: 'input',
+                            name: 'email',
+                            message: 'Please enter your email address:',
+                            
+                        },
+                    ]).then((response2) => {
+                        // console.log(response)
+                        // if (response.position === 'Quit') {
+                        //     render()
+                        // }
+                        switch (response.position){
+                            case 'Engineer': 
+                                currentEmployeeQuestion = engineerQuestion;
+                                
+                                break;
+                            case 'Intern':
+                                currentEmployeeQuestion = internQuestion;
+                               
+                                break;
+                            case 'Manager':
+                                currentEmployeeQuestion = managerQuestion;
+                              
+                                break;
+                            case 'Quit':
+                                return;
+                        }
+                        currentEmployee = response;
+                        inquirer    
+                            .prompt(currentEmployeeQuestion).then((response) => {
+                                // console.log(response)
+                                // console.log(currentEmployee)
+                                switch (currentEmployee.position){
+                                    case 'Engineer': 
+                                        newEmployee =  new Engineer(currentEmployee.name, currentEmployee.id, currentEmployee.email, response.gitHub);                
+                                        break;
+                                    case 'Intern':
+                                        newEmployee = new Intern(currentEmployee.name, currentEmployee.id, currentEmployee.email, response.school)              
+                                        break;
+                                    case 'Manager':
+                                        newEmployee = new Manager(currentEmployee.name, currentEmployee.id, currentEmployee.email, response.officeNumber)                    
+                                        break;
+                                }
+                                // console.log(newEmployee)
+                                allEmployees.push(newEmployee);
+                                // console.log(allEmployees);
+                            }).then( () => teamMembers());
+                    })
 
             }
-            currentEmployee = response;
-            inquirer    
-        .prompt(currentEmployeeQuestion).then((response) => {
-            // console.log(response)
-            // console.log(currentEmployee)
-            switch (currentEmployee.position){
-                case 'Engineer': 
-                    newEmployee =  new Engineer(currentEmployee.name, currentEmployee.id, currentEmployee.email, response.gitHub);                
-                    break;
-                case 'Intern':
-                    newEmployee = new Intern(currentEmployee.name, currentEmployee.id, currentEmployee.email, response.school)              
-                    break;
-                case 'Manager':
-                    newEmployee = new Manager(currentEmployee.name, currentEmployee.id, currentEmployee.email, response.officeNumber)                    
-                    break;
-            }
-            console.log(newEmployee)
-            allEmployees.push(newEmployee);
-            console.log(allEmployees);
-            
 
-          
-
-        }).then( () => teamMembers());
         })
 }
 
