@@ -45,7 +45,6 @@ const internQuestion = [
     },
 ]
 function teamMembers(){
-    //move first question to its own
     inquirer
         .prompt([
             {
@@ -58,7 +57,10 @@ function teamMembers(){
 
         ]).then((response)  => {
             if (response.position === 'Quit'){
-                render(allEmployees)
+                fs.writeFile(outputPath, render(allEmployees), function (err){
+                    if (err) throw err;
+                    console.log('Your team has been created!');
+                })
                 return
             }
             else {
@@ -83,10 +85,6 @@ function teamMembers(){
                             
                         },
                     ]).then((response2) => {
-                        // console.log(response)
-                        // if (response.position === 'Quit') {
-                        //     render()
-                        // }
                         switch (response.position){
                             case 'Engineer': 
                                 currentEmployeeQuestion = engineerQuestion;
@@ -103,7 +101,10 @@ function teamMembers(){
                             case 'Quit':
                                 return;
                         }
-                        currentEmployee = response;
+                        currentEmployee = {
+                            ...response,
+                            ...response2
+                        }
                         inquirer    
                             .prompt(currentEmployeeQuestion).then((response) => {
                                 // console.log(response)
@@ -124,9 +125,7 @@ function teamMembers(){
                                 // console.log(allEmployees);
                             }).then( () => teamMembers());
                     })
-
             }
-
         })
 }
 
