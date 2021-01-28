@@ -10,8 +10,10 @@ This project has been built so that a user can give info about each of their tea
 
 * [Installation](#installation)
 * [Usage](#usage)
+* [Screenshots](#screenshots)
 * [Contributing](#contributing)
 * [Tests](#tests)
+* [Deployed-Site](#deployed-site)
 * [Questions](#questions)
 * [License](#license)
 
@@ -47,6 +49,12 @@ Anyone can contribute to this file by forking the repo, adding their code to the
 
 ## Tests
 [Test of the application](https://drive.google.com/file/d/1SXFQHYR4d8KqeB2PrXxSEZnSfD_-DccL/view?usp=sharing)
+
+
+---
+
+## Deployed Site
+[Live Site](https://mrosavourazeris.github.io/Template-Engine-Employee-Summary/)
 
 ---
 
